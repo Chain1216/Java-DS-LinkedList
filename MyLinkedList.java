@@ -7,9 +7,9 @@
  * university code of academic integrity:
  *  https://catalog.upenn.edu/pennbook/code-of-academic-integrity/ >
  * Signed,
- * Author: YOUR NAME HERE
- * Penn email: <YOUR-EMAIL-HERE@seas.upenn.edu>
- * Date: YYYY-MM-DD
+ * Author: Zhaoqin Wu
+ * Penn email: zhaoqinw@seas.upenn.edu>
+ * Date: 2022-6-02
  */
 
 public class MyLinkedList {
@@ -156,17 +156,105 @@ public class MyLinkedList {
      */
 
     public void reverse() {
-        /* IMPLEMENT THIS METHOD! */
+    	Node left_pointer = null;  // Three pointer methods
+    	Node mid_pointer = this.head;
+    	Node right_pointer = null;
+    	this.tail = mid_pointer;
+    	
+    	while (mid_pointer != null) {
+    		right_pointer = mid_pointer.next;
+    		mid_pointer.next = left_pointer;
+    		left_pointer = mid_pointer;
+    		mid_pointer = right_pointer;
+	
+    	}
+         	
+        this.head = left_pointer;
+        
 
     }
 
     public void removeMaximumValues(int N) {
-        /* IMPLEMENT THIS METHOD! */
+        for (int i = 0; i < N; i++) {
+        	
+        	if (N <=0 || this.head == null) {
+        		break;
+        	}
+        	
+        	String max = findMax(this.head);
+            this.head = removeMax(this.head,max); //update the head after one time removing
+        }
+        
+        int new_size = 0;
+        Node current = this.head;
 
+        while(current != null){
+            new_size += 1;
+            current = current.next;
+        }
+
+        this.size = new_size;
+        
+
+    }
+    
+    public static String findMax(Node head) {
+    	String max = head.value;
+    	while(head.next != null) {
+    		int result = max.compareTo(head.next.value);
+    		if(result<0) {
+    			max = head.next.value;
+    		}
+    		head = head.next;
+    	}
+		return max;
+    	
+    }
+    
+    public static Node removeMax(Node head, String max) { 
+    	
+    	while(head.value == max) {          // in case that the leading node is the largest one
+    		if (head.next == null) {        
+    			return null;                // in case that all nodes are the largest one
+    		}else  {
+    			head = head.next;           // remove the leading node and update the head
+    		}
+    	}
+    	
+    	Node current = head;               // after removing the leading node, update the current node to the head node
+    	
+		while(current.next != null) {     
+			if(current.next.value == max) {
+				current.next = current.next.next; // remove any nodes in the middle with the largest value 
+			} else {
+			current = current.next; // update the current 
+		}
+	}
+    	
+    	return head;
     }
 
     public Boolean containsSubsequence(MyLinkedList two) {
-        /* IMPLEMENT THIS METHOD! */
+    	if (two == null) {
+        	return true;
+        }
+        
+        Node curr_other = two.head;
+        Node curr_head = this.head;
+        
+        while(curr_other != null && curr_head != null) {   
+        	if(curr_other.value == curr_head.value) {  // if one element in other = one element in head
+        		curr_other = curr_other.next;          // update both element in head and other
+        		curr_head = curr_head.next;
+        	}else {
+        		curr_head = curr_head.next;            // in case of not equal, only update the element in head
+        	}
+        	
+        	if (curr_other == null) {                  // other is a subsequence of head
+        		return true;
+        	}
+        }
+        
 
         return false;
     }
